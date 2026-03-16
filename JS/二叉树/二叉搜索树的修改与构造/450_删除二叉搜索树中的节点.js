@@ -1,0 +1,65 @@
+function TreeNode(val, left, right) {
+    this.val = (val===undefined ? 0 : val)
+    this.left = (left===undefined ? null : left)
+    this.right = (right===undefined ? null : right)
+}
+// 构建二叉树的辅助函数
+function buildTree(arr) {
+    if (arr.length === 0) return null;
+    const nodes = arr.map(val => val!== null? new TreeNode(val) : null);
+    let i = 0, j = 1;
+    while (j < arr.length) {
+        if (nodes[i]!== null) {
+            nodes[i].left = nodes[j];
+            j++;
+            if (j < arr.length) {
+                nodes[i].right = nodes[j];
+                j++;
+            }
+        }
+        i++;
+    }
+    return nodes[0];
+}
+
+var deleteNode = function(root, key) {
+    if (!root) return null;
+    if (key > root.val) {
+        root.right = deleteNode(root.right, key);
+        return root;
+    } else if (key < root.val) {
+        root.left = deleteNode(root.left, key);
+        return root;
+    } else {
+        // 场景1: 该节点是叶节点
+        if (!root.left && !root.right) {
+            return null
+        }
+        // 场景2: 有一个孩子节点不存在
+        if (root.left && !root.right) {
+            return root.left;
+        } else if (root.right && !root.left) {
+            return root.right;
+        }
+        // 场景3: 左右节点都存在
+        const rightNode = root.right;
+        // 获取最小值节点
+        const minNode = getMinNode(rightNode);
+        // 将待删除节点的值替换为最小值节点值
+        root.val = minNode.val;
+        // 删除最小值节点
+        root.right = deleteNode(root.right, minNode.val);
+        return root;
+    }
+};
+function getMinNode(root) {
+    while (root.left) {
+        root = root.left;
+    }
+    return root;
+}
+
+const input = [50,30,70,null,40,60,80]
+const root = buildTree(input);
+const result = deleteNode(root, 50);
+console.log(result);

@@ -1,0 +1,17 @@
+var maxProfit = function(prices) {
+    let ans = 0
+    let minPrice = 10e4
+    for(let price of prices){
+        if(minPrice > price){
+            minPrice = price
+            continue
+        }
+        ans = Math.max(ans,price-minPrice)
+    }
+    return ans
+};
+
+prices = [7]
+console.log(maxProfit(prices))
+
+// 我们只需要遍历价格数组一遍，记录历史最低点，然后在每一天考虑这么一个问题：如果我是在历史最低点买进的，那么我今天卖出能赚多少钱？当考虑完所有天数之时，我们就得到了最好的答案。
